@@ -23,7 +23,7 @@ class SensorData:
         except Exception as e:
             raise SensorException(f"Error while connecting to MongoDB: {str(e)}", sys)
         
-
+    
     def export_csv_as_collection(self, file_path, collection_name, database_name : Optional [str] = None):
         """
         This method is responsible for export data from CSV file to mongoDB

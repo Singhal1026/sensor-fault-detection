@@ -177,8 +177,6 @@ class DataValidation:
             if len(error_message) > 0:
                 logging.error(f"Error while validating data: {error_message}")
                 raise SensorException(error_message, sys)
-
-            logging.info("Data validation process completed successfully")
             
             status = self.validate_dataset_drift(train_df, test_df)
 
@@ -191,7 +189,6 @@ class DataValidation:
                 drift_report_file_path = self.data_validation_config.drift_report_file_path
             ) 
 
-            logging.info("Data validation process completed successfully")
             logging.info(f"Data validation artifact: {data_validation_artifact}")
 
             return data_validation_artifact
