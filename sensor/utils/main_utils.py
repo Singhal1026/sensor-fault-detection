@@ -73,4 +73,16 @@ def save_object(file_path: str, obj: object):
     except Exception as e:
         logging.error(f"Error while saving object: {str(e)}")
         raise SensorException(f"Error while saving object: {str(e)}", sys)
+
+
+def load_object(file_path: str):
+    try:
+        logging.info("Entered in load_object method of main_utils.py file")
+        with open(file_path, 'rb') as file_obj:
+            return dill.load(file_obj)
+        logging.info("object loaded successfully")
+    
+    except Exception as e:
+        logging.error(f"Error while loading object: {str(e)}")
+        raise SensorException(f"Error while loading object: {str(e)}", sys) 
         

@@ -27,10 +27,10 @@ class DataIngestion:
             sensor_data = SensorData()
             df = sensor_data.export_collection_as_dataframe(self.config.collection_name)
 
-            featur_store_file_path = self.config.feature_store_file_path
-            dir_path = os.path.dirname(featur_store_file_path)
+            feature_store_file_path = self.config.feature_store_file_path
+            dir_path = os.path.dirname(feature_store_file_path)
             os.makedirs(dir_path, exist_ok=True)
-            df.to_csv(featur_store_file_path, index=False, header=True)
+            df.to_csv(feature_store_file_path, index=False, header=True)
             return df
 
         except SensorException as e:
@@ -68,7 +68,7 @@ class DataIngestion:
         try:
             logging.info("Initiating data ingestion process")
             df = self.export_data_into_feature_store()
-            df = self._preprocess_data(df)
+            df = df.drop(columns=self._schema_config['drop_columns'], axis=1)  
             self.split_data_as_train_test(df)
             logging.info("Data ingestion process completed successfully")
             return DataIngestionArtifact(train_data_file_path=self.config.training_file_path, test_data_file_path=self.config.testing_file_path)
@@ -76,16 +76,4 @@ class DataIngestion:
         except SensorException as e:
             logging.error(f"Error while initiating data ingestion: {str(e)}")
             raise SensorException(f"Error while initiating data ingestion: {str(e)}", sys)
-
-
-    def _preprocess_data(self, df: DataFrame) -> DataFrame:
-        try:
-            df = df.dropna()
-            df = df.drop_duplicates()
-            df = df.sample(frac=1).reset_index(drop=True)
-            df = df.drop(columns=self._schema_config['drop_columns'], axis=1)  
-            return df
-        except Exception as e:
-            logging.error(f"Error while preprocessing data: {str(e)}")
-            raise SensorException(f"Error while preprocessing data: {str(e)}", sys)
  

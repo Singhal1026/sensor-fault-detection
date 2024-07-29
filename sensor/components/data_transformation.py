@@ -76,7 +76,7 @@ class DataTransformation:
 
             preprocessor = self.get_data_transformer_object()
 
-            preprocessor_object = preprocessor.fit(input_feature_test_df)
+            preprocessor_object = preprocessor.fit(input_feature_train_df)
 
             transformed_input_train_feature = preprocessor_object.transform(input_feature_train_df)
 
