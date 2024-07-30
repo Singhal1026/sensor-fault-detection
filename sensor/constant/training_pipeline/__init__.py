@@ -5,6 +5,8 @@ PIPELINE_NAME = 'sensor'
 ARTIFACT_DIR = 'artifact'
 FILE_NAME = 'sensor.csv'
 
+SAVED_MODEL_DIR = 'saved_models'
+
 TRAINING_DATA_FILE:str = 'train.csv'
 TESTING_DATA_FILE: str = 'test.csv'
 
@@ -47,3 +49,16 @@ MODEL_TRAINER_TRAINED_MODEL_DIR: str = 'trained_model'
 MODEL_TRAINER_TRAINED_MODEL_NAME: str = 'model.pkl'
 MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
 MODER_TRAINER_UNDER_FITTING_OVER_FITTING_THRESHOLD: float = 0.05
+
+
+# Model Evaluation related constant values starts with MODEL_EVALUATION
+
+MODEL_EVALUATION_DIR_NAME: str = 'model_evaluation'
+MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.02
+MODEL_EVALUATION_REPORT_NAME: str = 'report.yaml'
+
+
+# Model Pusher related constant values starts with MODEL_PUSHER
+
+MODEL_PUSHER_DIR_NAME: str = 'model_pusher'
+MODEL_PUSHER_SAVED_MODEL_DIR: str = SAVED_MODEL_DIR

@@ -173,7 +173,7 @@ class DataValidation:
 
             if not self.validate_target_column(test_df):
                 error_message += "Target column is missing in testing data\n"
-            print(error_message)
+
             if len(error_message) > 0:
                 logging.error(f"Error while validating data: {error_message}")
                 raise SensorException(error_message, sys)
