@@ -5,7 +5,7 @@ from sensor.logger import logging
 
 from sensor.entity.artifact_entity import DataTransformationArtifact
 from sensor.pipeline.training_pipeline import TrainPipeline
-from sensor.utils.main_utils import load_object, read_yaml_file
+from sensor.utils.main_utils import load_object, read_yaml_file, get_latest_preprocessor_path
 from sensor.ml.model.estimater import ModelResolver,TargetValueMapping
 from sensor.pipeline import training_pipeline
 from sensor.constant.training_pipeline import SAVED_MODEL_DIR
@@ -91,7 +91,7 @@ async def predict(file: UploadFile = File(...)) -> Response:
         df = df[required_columns]
 
         # Get the preprocessor path
-        preprocessor_path = 'C:\\Users\\Hello\\PycharmProjects\\ML_project\\sensor-fault-detection\\artifact\\07_31_2024_16_53_57\\data_transformation\\transformed_object\\preprocessing.pkl'
+        preprocessor_path = get_latest_preprocessor_path()
         if not os.path.exists(preprocessor_path):
             logging.error("Preprocessor is not available")
             return Response("Preprocessor is not available", status_code=500)

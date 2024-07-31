@@ -4,6 +4,7 @@ import numpy as np
 import os
 import sys
 import dill
+import glob
 from sensor.exception import SensorException
 import logging
 
@@ -86,3 +87,48 @@ def load_object(file_path: str):
         logging.error(f"Error while loading object: {str(e)}")
         raise SensorException(f"Error while loading object: {str(e)}", sys) 
         
+
+def get_latest_preprocessor_path(artifact_dir='artifact', sub_dir='data_transformation/transformed_object', file_name='preprocessing.pkl'):
+    try:
+        # Get the root directory of the project
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        project_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
+
+        # Build the full path to the artifact directory
+        artifact_path = os.path.join(project_root, artifact_dir)
+
+        logging.info(f"Artifact path: {artifact_path}")
+
+        # Check if artifact directory exists
+        if not os.path.exists(artifact_path):
+            raise FileNotFoundError(f"Artifact directory not found at path: {artifact_path}")
+
+        logging.info('Artifact directory found')
+
+        # Find all timestamp directories in the artifact directory
+        timestamp_dirs = glob.glob(os.path.join(artifact_path, '*'))
+
+        logging.info(f"Found timestamp directories: {timestamp_dirs}")
+
+        # Ensure that there are timestamp directories available
+        if not timestamp_dirs:
+            raise FileNotFoundError("No timestamp directories found in artifact directory")
+
+        # Get the latest timestamp directory
+        latest_timestamp_dir = max(timestamp_dirs, key=os.path.getctime)
+
+        logging.info(f"Latest timestamp directory: {latest_timestamp_dir}")
+
+        # Build the preprocessor path
+        preprocessor_path = os.path.join(latest_timestamp_dir, sub_dir, file_name)
+
+        logging.info(f"Preprocessor path: {preprocessor_path}")
+
+        if not os.path.exists(preprocessor_path):
+            raise FileNotFoundError(f"Preprocessor file not found at path: {preprocessor_path}")
+
+        return preprocessor_path
+
+    except Exception as e:
+        logging.error(f"Error while getting preprocessor path: {str(e)}")
+        raise SensorException(e, sys)
