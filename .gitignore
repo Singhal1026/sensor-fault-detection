@@ -168,3 +168,4 @@ tree_output.txt
 
 # Additional folders
 /artifact
+/saved_models

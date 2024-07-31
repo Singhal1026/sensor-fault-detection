@@ -13,6 +13,8 @@ from sensor.components.model_pusher import ModelPusher
 
 class TrainPipeline:
 
+    is_pipeline_running = False
+
     def __init__(self):
         self.training_pipeline_config = TrainingPipelineConfig()
 
@@ -131,21 +133,44 @@ class TrainPipeline:
 
     def run_pipeline(self):
         try:
-            data_ingestion_artifact:DataIngestionArtifact = self.start_data_ingestion()
-            data_validation_artifact=self.start_data_validaton(data_ingestion_artifact=data_ingestion_artifact)
-            data_transformation_artifact:DataTransformationArtifact = self.start_data_transformation(data_validation_artifact)
-            model_trainer_artifact:ModelTrainerArtifact = self.start_model_training(data_transformation_artifact)
-            model_evaluation_artifact:ModelEvaluationArtifact = self.start_model_evaluation(model_trainer_artifact, data_validation_artifact)
+            # Set the pipeline running flag to True
+            TrainPipeline.is_pipeline_running = True
+            
+            # Start the data ingestion process
+            data_ingestion_artifact: DataIngestionArtifact = self.start_data_ingestion()
+            
+            # Validate the ingested data
+            data_validation_artifact = self.start_data_validaton(data_ingestion_artifact=data_ingestion_artifact)
+            
+            # Transform the validated data
+            data_transformation_artifact: DataTransformationArtifact = self.start_data_transformation(data_validation_artifact)
+            
+            # Train the model using the transformed data
+            model_trainer_artifact: ModelTrainerArtifact = self.start_model_training(data_transformation_artifact)
+            
+            # Evaluate the trained model
+            model_evaluation_artifact: ModelEvaluationArtifact = self.start_model_evaluation(model_trainer_artifact, data_validation_artifact)
 
+            # Check if the new model is accepted
             if not model_evaluation_artifact.is_model_accepted:
+                # Log that the model is not accepted
                 logging.info("Model is not accepted")
-                raise Exception("Trained model is not better then best model")
+                # Do not raise an exception, just log and continue
             else:
+                # Log that the model is accepted
                 logging.info("Model is accepted")
+                # Push the accepted model to deployment
+                model_pusher_artifact: ModelPusherArtifact = self.start_model_pusher(model_evaluation_artifact)
 
-            model_pusher_artifact:ModelPusherArtifact = self.start_model_pusher(model_evaluation_artifact)
-                
-        except Exception as e :    
+            # Reset the pipeline running flag to False
+            TrainPipeline.is_pipeline_running = False
+
+        except Exception as e:
+            # Reset the pipeline running flag to False in case of an exception
+            TrainPipeline.is_pipeline_running = False
+            # Log the error message
             logging.error(f"Error while running pipeline: {str(e)}")
-            raise  SensorException(e,sys)
+            # Raise the custom SensorException with the error details
+            raise SensorException(e, sys)
+
 
