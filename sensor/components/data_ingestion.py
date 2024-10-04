@@ -37,6 +37,7 @@ class DataIngestion:
             logging.error(f"Error while exporting data into feature store: {str(e)}")
             raise SensorException(f"Error while exporting data into feature store: {str(e)}", sys)
 
+
     def split_data_as_train_test(self, dataframe: DataFrame):
         try:
             train_set, test_set = train_test_split(dataframe, test_size=self.config.train_test_split_ratio, random_state=42) 
@@ -60,6 +61,7 @@ class DataIngestion:
         except Exception as e:
             logging.error(f"Error while splitting data into train and test set: {str(e)}")
             raise SensorException(f"Error while splitting data into train and test set: {str(e)}", sys)
+
 
     def initiate_data_ingestion(self)-> DataIngestionArtifact:
         """

@@ -1,0 +1,2 @@
+TRAINING_BUCKET_NAME = 'scania_sensor_training_bucket'
+PREDICTION_BUCKET_NAME = 'scania_sensor_prediction_bucket'
