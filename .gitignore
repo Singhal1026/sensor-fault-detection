@@ -165,7 +165,9 @@ cython_debug/
 # Additional files
 mongodb.ipynb
 tree_output.txt
+.dockerignore
 
 # Additional folders
 /artifact
 /saved_models
+/secret-keys
