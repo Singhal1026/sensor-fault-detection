@@ -166,6 +166,7 @@ cython_debug/
 mongodb.ipynb
 tree_output.txt
 .dockerignore
+deployment-steps.txt
 
 # Additional folders
 /artifact
